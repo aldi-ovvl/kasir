@@ -1,0 +1,33 @@
+body{
+    background:#f5f7fb;
+}
+
+.sidebar{
+    width:250px;
+    min-height:100vh;
+    background:#212529;
+}
+
+.sidebar .nav-link{
+    color:#fff;
+    padding:12px;
+}
+
+.sidebar .nav-link:hover{
+    background:#343a40;
+    border-radius:8px;
+}
+
+.stat-card{
+    border:none;
+    border-radius:15px;
+}
+
+.stat-card h2{
+    font-weight:bold;
+}
+
+.content{
+    margin-left:250px;
+    padding:20px;
+}
