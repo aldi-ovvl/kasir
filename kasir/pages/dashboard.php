@@ -1,140 +1,194 @@
 <?php
 
-$produk = mysqli_query(
-    $conn,
-    "SELECT COUNT(*) total FROM produk"
-);
-$totalProduk =
-    mysqli_fetch_assoc($produk);
+include "../config/koneksi.php";
 
-$kategori = mysqli_query(
-    $conn,
-    "SELECT COUNT(*) total FROM kategori"
-);
-$totalKategori =
-    mysqli_fetch_assoc($kategori);
+include "../includes/header.php";
 
-$transaksi = mysqli_query(
-    $conn,
-    "SELECT COUNT(*) total
+include "../includes/sidebar.php";
+
+$totalProduk = $pdo
+->query("SELECT COUNT(*) FROM produk")
+->fetchColumn();
+
+$totalKategori = $pdo
+->query("SELECT COUNT(*) FROM kategori")
+->fetchColumn();
+
+$totalTransaksi = $pdo
+->query("
+SELECT COUNT(*)
 FROM transaksi
-WHERE DATE(tanggal)=CURDATE()"
-);
-$totalTransaksi =
-    mysqli_fetch_assoc($transaksi);
+WHERE DATE(tanggal)=CURDATE()
+")
+->fetchColumn();
 
-$pendapatan = mysqli_query(
-    $conn,
-    "SELECT SUM(total) total
+$totalPendapatan = $pdo
+->query("
+SELECT IFNULL(SUM(total),0)
 FROM transaksi
-WHERE DATE(tanggal)=CURDATE()"
-);
-$totalPendapatan =
-    mysqli_fetch_assoc($pendapatan);
+WHERE DATE(tanggal)=CURDATE()
+")
+->fetchColumn();
+
 ?>
 
-<div class="content">
+<div class="col-md-10 p-4">
 
-    <h2 class="mb-4">
-        Dashboard
-    </h2>
+<h3 class="mb-4">
 
-    <div class="row">
+Dashboard
 
-        <div class="col-md-3 mb-3">
+</h3>
 
-            <div class="card stat-card bg-primary text-white shadow">
+<div class="row">
 
-                <div class="card-body">
+<div class="col-md-3">
 
-                    <h6>Total Produk</h6>
+<div class="card card-dashboard">
 
-                    <h2>
-                        <?= $totalProduk['total']; ?>
-                    </h2>
+<div class="card-body">
 
-                </div>
+<h6>Total Produk</h6>
 
-            </div>
+<h2>
 
-        </div>
+<?= $totalProduk ?>
 
-        <div class="col-md-3 mb-3">
-
-            <div class="card stat-card bg-success text-white shadow">
-
-                <div class="card-body">
-
-                    <h6>Total Kategori</h6>
-
-                    <h2>
-                        <?= $totalKategori['total']; ?>
-                    </h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3 mb-3">
-
-            <div class="card stat-card bg-warning text-white shadow">
-
-                <div class="card-body">
-
-                    <h6>Transaksi Hari Ini</h6>
-
-                    <h2>
-                        <?= $totalTransaksi['total']; ?>
-                    </h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3 mb-3">
-
-            <div class="card stat-card bg-danger text-white shadow">
-
-                <div class="card-body">
-
-                    <h6>Pendapatan</h6>
-
-                    <h4>
-
-                        Rp <?= number_format(
-                            $totalPendapatan['total']
-                            ?? 0,
-                            0,
-                            ',',
-                            '.'
-                        ); ?>
-
-                    </h4>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card shadow mt-4">
-
-        <div class="card-header">
-            Grafik Penjualan
-        </div>
-
-        <div class="card-body">
-
-            <canvas id="salesChart"></canvas>
-
-        </div>
-
-    </div>
+</h2>
 
 </div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card card-dashboard">
+
+<div class="card-body">
+
+<h6>Total Kategori</h6>
+
+<h2>
+
+<?= $totalKategori ?>
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card card-dashboard">
+
+<div class="card-body">
+
+<h6>Transaksi Hari Ini</h6>
+
+<h2>
+
+<?= $totalTransaksi ?>
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card card-dashboard">
+
+<div class="card-body">
+
+<h6>Pendapatan Hari Ini</h6>
+
+<h4>
+
+Rp <?= number_format($totalPendapatan) ?>
+
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card mt-4">
+
+<div class="card-header">
+
+Grafik Penjualan
+
+</div>
+
+<div class="card-body">
+
+<canvas id="grafikPenjualan"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const ctx =
+document.getElementById(
+'grafikPenjualan'
+);
+
+new Chart(ctx,{
+
+type:'bar',
+
+data:{
+
+labels:[
+'Sen',
+'Sel',
+'Rab',
+'Kam',
+'Jum',
+'Sab',
+'Min'
+],
+
+datasets:[{
+
+label:'Penjualan',
+
+data:[
+12,
+19,
+3,
+5,
+8,
+14,
+10
+]
+
+}]
+
+}
+
+});
+
+</script>
+
+<?php
+
+include "../includes/footer.php";
+
+?>

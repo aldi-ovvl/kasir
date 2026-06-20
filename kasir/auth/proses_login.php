@@ -1,45 +1,43 @@
 <?php
+
 session_start();
-include '../config/koneksi.php';
+
+require '../config/koneksi.php';
 
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-$stmt = $conn->prepare(
-"SELECT * FROM users
- WHERE username=?");
-
-$stmt->bind_param(
-"s",
-$username
+$stmt = $pdo->prepare(
+"SELECT * FROM users WHERE username=?"
 );
 
-$stmt->execute();
+$stmt->execute([$username]);
 
-$result = $stmt->get_result();
-
-$user = $result->fetch_assoc();
+$user = $stmt->fetch();
 
 if($user){
 
-if(password_verify(
-$password,
-$user['password']
-)){
+    if(password_verify(
+        $password,
+        $user['password']
+    )){
 
-$_SESSION['login']=true;
-$_SESSION['id']=$user['id'];
-$_SESSION['nama']=$user['nama'];
-$_SESSION['role']=$user['role'];
+        $_SESSION['login']=true;
+        $_SESSION['id']=$user['id'];
+        $_SESSION['nama']=$user['nama'];
+        $_SESSION['role']=$user['role'];
 
-header("Location:../index.php");
+        header("Location: ../index.php");
+        exit;
+
+    }else{
+
+        echo "Password Salah";
+
+    }
 
 }else{
 
-header("Location:login.php?error");
-}
+    echo "User Tidak Ditemukan";
 
-}else{
-
-header("Location:login.php?error");
 }
