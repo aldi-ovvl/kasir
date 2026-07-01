@@ -8,35 +8,37 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 $stmt = $pdo->prepare(
-"SELECT * FROM users WHERE username=?"
+    "SELECT * FROM users WHERE username=?"
 );
 
 $stmt->execute([$username]);
 
 $user = $stmt->fetch();
 
-if($user){
+if ($user) {
 
-    if(password_verify(
-        $password,
-        $user['password']
-    )){
+    if (
+        password_verify(
+            $password,
+            $user['password']
+        )
+    ) {
 
-        $_SESSION['login']=true;
-        $_SESSION['id']=$user['id'];
-        $_SESSION['nama']=$user['nama'];
-        $_SESSION['role']=$user['role'];
+        $_SESSION['login'] = true;
+        $_SESSION['id'] = $user['id'];
+        $_SESSION['nama'] = $user['nama'];
+        $_SESSION['role'] = $user['role'];
 
         header("Location: ../index.php");
         exit;
 
-    }else{
+    } else {
 
         echo "Password Salah";
 
     }
 
-}else{
+} else {
 
     echo "User Tidak Ditemukan";
 

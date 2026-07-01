@@ -24,7 +24,7 @@ $data = $cek->fetch(PDO::FETCH_ASSOC);
 |--------------------------------------------------------------------------
 */
 
-if(!$data){
+if (!$data) {
 
     $pdo->exec("
         INSERT INTO pengaturan_toko
@@ -56,15 +56,15 @@ if(!$data){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['simpan'])){
+if (isset($_POST['simpan'])) {
 
     $nama_toko = trim($_POST['nama_toko']);
-    $alamat    = trim($_POST['alamat']);
-    $telepon   = trim($_POST['telepon']);
+    $alamat = trim($_POST['alamat']);
+    $telepon = trim($_POST['telepon']);
 
     $logoLama = $data['logo'];
 
-    if(!empty($_FILES['logo']['name'])){
+    if (!empty($_FILES['logo']['name'])) {
 
         $ext = pathinfo(
             $_FILES['logo']['name'],
@@ -72,28 +72,28 @@ if(isset($_POST['simpan'])){
         );
 
         $namaLogo =
-            time().'_logo.'.$ext;
+            time() . '_logo.' . $ext;
 
         $folder =
             "../assets/uploads/logo/";
 
-        if(!is_dir($folder)){
-            mkdir($folder,0777,true);
+        if (!is_dir($folder)) {
+            mkdir($folder, 0777, true);
         }
 
         move_uploaded_file(
             $_FILES['logo']['tmp_name'],
-            $folder.$namaLogo
+            $folder . $namaLogo
         );
 
-        if(
+        if (
             !empty($logoLama) &&
-            file_exists($folder.$logoLama)
-        ){
-            unlink($folder.$logoLama);
+            file_exists($folder . $logoLama)
+        ) {
+            unlink($folder . $logoLama);
         }
 
-    }else{
+    } else {
 
         $namaLogo = $logoLama;
     }
@@ -141,8 +141,7 @@ if(isset($_POST['simpan'])){
 
         <div class="card-body">
 
-            <form method="POST"
-                  enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data">
 
                 <div class="mb-3">
 
@@ -150,12 +149,8 @@ if(isset($_POST['simpan'])){
                         Nama Toko
                     </label>
 
-                    <input
-                        type="text"
-                        name="nama_toko"
-                        class="form-control"
-                        value="<?= htmlspecialchars($data['nama_toko']) ?>"
-                        required>
+                    <input type="text" name="nama_toko" class="form-control"
+                        value="<?= htmlspecialchars($data['nama_toko']) ?>" required>
 
                 </div>
 
@@ -165,9 +160,7 @@ if(isset($_POST['simpan'])){
                         Alamat
                     </label>
 
-                    <textarea
-                        name="alamat"
-                        rows="4"
+                    <textarea name="alamat" rows="4"
                         class="form-control"><?= htmlspecialchars($data['alamat']) ?></textarea>
 
                 </div>
@@ -178,10 +171,7 @@ if(isset($_POST['simpan'])){
                         Telepon
                     </label>
 
-                    <input
-                        type="text"
-                        name="telepon"
-                        class="form-control"
+                    <input type="text" name="telepon" class="form-control"
                         value="<?= htmlspecialchars($data['telepon']) ?>">
 
                 </div>
@@ -192,30 +182,21 @@ if(isset($_POST['simpan'])){
                         Logo Toko
                     </label>
 
-                    <input
-                        type="file"
-                        name="logo"
-                        class="form-control">
+                    <input type="file" name="logo" class="form-control">
 
                 </div>
 
-                <?php if(!empty($data['logo'])): ?>
+                <?php if (!empty($data['logo'])): ?>
 
-                <div class="mb-3">
+                    <div class="mb-3">
 
-                    <img
-                        src="../assets/uploads/logo/<?= $data['logo'] ?>"
-                        width="150"
-                        class="img-thumbnail">
+                        <img src="../assets/uploads/logo/<?= $data['logo'] ?>" width="150" class="img-thumbnail">
 
-                </div>
+                    </div>
 
                 <?php endif; ?>
 
-                <button
-                    type="submit"
-                    name="simpan"
-                    class="btn btn-primary">
+                <button type="submit" name="simpan" class="btn btn-primary">
 
                     <i class="bi bi-save"></i>
                     Simpan Pengaturan

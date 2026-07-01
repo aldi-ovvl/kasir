@@ -9,11 +9,11 @@ include "../includes/sidebar.php";
 | TAMBAH KATEGORI
 |--------------------------------------------------------------------------
 */
-if(isset($_POST['tambah'])){
+if (isset($_POST['tambah'])) {
 
     $nama = trim($_POST['nama_kategori']);
 
-    if(!empty($nama)){
+    if (!empty($nama)) {
 
         $cek = $pdo->prepare("
             SELECT COUNT(*)
@@ -23,7 +23,7 @@ if(isset($_POST['tambah'])){
 
         $cek->execute([$nama]);
 
-        if($cek->fetchColumn() == 0){
+        if ($cek->fetchColumn() == 0) {
 
             $stmt = $pdo->prepare("
                 INSERT INTO kategori
@@ -52,9 +52,9 @@ if(isset($_POST['tambah'])){
 | UPDATE KATEGORI
 |--------------------------------------------------------------------------
 */
-if(isset($_POST['update'])){
+if (isset($_POST['update'])) {
 
-    $id   = $_POST['id_kategori'];
+    $id = $_POST['id_kategori'];
     $nama = trim($_POST['nama_kategori']);
 
     $stmt = $pdo->prepare("
@@ -63,7 +63,7 @@ if(isset($_POST['update'])){
         WHERE id_kategori=?
     ");
 
-    $stmt->execute([$nama,$id]);
+    $stmt->execute([$nama, $id]);
 
     echo "
     <script>
@@ -82,7 +82,7 @@ if(isset($_POST['update'])){
 | HAPUS KATEGORI
 |--------------------------------------------------------------------------
 */
-if(isset($_GET['hapus'])){
+if (isset($_GET['hapus'])) {
 
     $id = $_GET['hapus'];
 
@@ -115,252 +115,224 @@ $data = $pdo->query("
 
 <div class="col-md-10 p-4">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-<h3>Data Kategori</h3>
+        <h3>Data Kategori</h3>
 
-<button
-class="btn btn-primary"
-data-bs-toggle="modal"
-data-bs-target="#modalTambah">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
 
-<i class="bi bi-plus-circle"></i>
-Tambah Kategori
+            <i class="bi bi-plus-circle"></i>
+            Tambah Kategori
 
-</button>
+        </button>
 
-</div>
+    </div>
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-body">
+        <div class="card-body">
 
-<table class="table table-bordered table-striped datatable">
+            <table class="table table-bordered table-striped datatable">
 
-<thead>
+                <thead>
 
-<tr>
+                    <tr>
 
-<th width="5%">No</th>
-<th>Nama Kategori</th>
-<th width="20%">Aksi</th>
+                        <th width="5%">No</th>
+                        <th>Nama Kategori</th>
+                        <th width="20%">Aksi</th>
 
-</tr>
+                    </tr>
 
-</thead>
+                </thead>
 
-<tbody>
+                <tbody>
 
-<?php
-$no=1;
+                    <?php
+                    $no = 1;
 
-while($row = $data->fetch(PDO::FETCH_ASSOC)):
-?>
+                    while ($row = $data->fetch(PDO::FETCH_ASSOC)):
+                        ?>
 
-<tr>
+                        <tr>
 
-<td><?= $no++; ?></td>
+                            <td><?= $no++; ?></td>
 
-<td><?= htmlspecialchars($row['nama_kategori']); ?></td>
+                            <td><?= htmlspecialchars($row['nama_kategori']); ?></td>
 
-<td>
+                            <td>
 
-<button
-class="btn btn-warning btn-sm"
-data-bs-toggle="modal"
-data-bs-target="#edit<?= $row['id_kategori']; ?>">
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#edit<?= $row['id_kategori']; ?>">
 
-<i class="bi bi-pencil-square"></i>
+                                    <i class="bi bi-pencil-square"></i>
 
-</button>
+                                </button>
 
-<a
-href="?hapus=<?= $row['id_kategori']; ?>"
-class="btn btn-danger btn-sm btnHapus">
+                                <a href="?hapus=<?= $row['id_kategori']; ?>" class="btn btn-danger btn-sm btnHapus">
 
-<i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash"></i>
 
-</a>
+                                </a>
 
-</td>
+                            </td>
 
-</tr>
+                        </tr>
 
-<!-- MODAL EDIT -->
+                        <!-- MODAL EDIT -->
 
-<div
-class="modal fade"
-id="edit<?= $row['id_kategori']; ?>">
+                        <div class="modal fade" id="edit<?= $row['id_kategori']; ?>">
 
-<div class="modal-dialog">
+                            <div class="modal-dialog">
 
-<div class="modal-content">
+                                <div class="modal-content">
 
-<form method="POST">
+                                    <form method="POST">
 
-<div class="modal-header bg-warning">
+                                        <div class="modal-header bg-warning">
 
-<h5 class="modal-title">
+                                            <h5 class="modal-title">
 
-Edit Kategori
+                                                Edit Kategori
 
-</h5>
+                                            </h5>
 
-</div>
+                                        </div>
 
-<div class="modal-body">
+                                        <div class="modal-body">
 
-<input
-type="hidden"
-name="id_kategori"
-value="<?= $row['id_kategori']; ?>">
+                                            <input type="hidden" name="id_kategori" value="<?= $row['id_kategori']; ?>">
 
-<label>Nama Kategori</label>
+                                            <label>Nama Kategori</label>
 
-<input
-type="text"
-name="nama_kategori"
-class="form-control"
-value="<?= htmlspecialchars($row['nama_kategori']); ?>"
-required>
+                                            <input type="text" name="nama_kategori" class="form-control"
+                                                value="<?= htmlspecialchars($row['nama_kategori']); ?>" required>
 
-</div>
+                                        </div>
 
-<div class="modal-footer">
+                                        <div class="modal-footer">
 
-<button
-type="submit"
-name="update"
-class="btn btn-success">
+                                            <button type="submit" name="update" class="btn btn-success">
 
-Simpan
+                                                Simpan
 
-</button>
+                                            </button>
 
-</div>
+                                        </div>
 
-</form>
+                                    </form>
 
-</div>
+                                </div>
 
-</div>
+                            </div>
 
-</div>
+                        </div>
 
-<?php endwhile; ?>
+                    <?php endwhile; ?>
 
-</tbody>
+                </tbody>
 
-</table>
+            </table>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <!-- MODAL TAMBAH -->
 
-<div
-class="modal fade"
-id="modalTambah">
+<div class="modal fade" id="modalTambah">
 
-<div class="modal-dialog">
+    <div class="modal-dialog">
 
-<div class="modal-content">
+        <div class="modal-content">
 
-<form method="POST">
+            <form method="POST">
 
-<div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-primary text-white">
 
-<h5 class="modal-title">
+                    <h5 class="modal-title">
 
-Tambah Kategori
+                        Tambah Kategori
 
-</h5>
+                    </h5>
 
-</div>
+                </div>
 
-<div class="modal-body">
+                <div class="modal-body">
 
-<label>Nama Kategori</label>
+                    <label>Nama Kategori</label>
 
-<input
-type="text"
-name="nama_kategori"
-class="form-control"
-required>
+                    <input type="text" name="nama_kategori" class="form-control" required>
 
-</div>
+                </div>
 
-<div class="modal-footer">
+                <div class="modal-footer">
 
-<button
-type="submit"
-name="tambah"
-class="btn btn-primary">
+                    <button type="submit" name="tambah" class="btn btn-primary">
 
-Simpan
+                        Simpan
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-</form>
+            </form>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <script>
 
-document.addEventListener(
-'DOMContentLoaded',
-function(){
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
 
-document
-.querySelectorAll('.btnHapus')
-.forEach(function(btn){
+            document
+                .querySelectorAll('.btnHapus')
+                .forEach(function (btn) {
 
-btn.addEventListener(
-'click',
-function(e){
+                    btn.addEventListener(
+                        'click',
+                        function (e) {
 
-e.preventDefault();
+                            e.preventDefault();
 
-let link = this.href;
+                            let link = this.href;
 
-Swal.fire({
+                            Swal.fire({
 
-title:'Hapus Data?',
+                                title: 'Hapus Data?',
 
-text:'Data tidak dapat dikembalikan',
+                                text: 'Data tidak dapat dikembalikan',
 
-icon:'warning',
+                                icon: 'warning',
 
-showCancelButton:true,
+                                showCancelButton: true,
 
-confirmButtonText:'Ya Hapus',
+                                confirmButtonText: 'Ya Hapus',
 
-cancelButtonText:'Batal'
+                                cancelButtonText: 'Batal'
 
-}).then((result)=>{
+                            }).then((result) => {
 
-if(result.isConfirmed){
+                                if (result.isConfirmed) {
 
-window.location = link;
+                                    window.location = link;
 
-}
+                                }
 
-});
+                            });
 
-});
+                        });
 
-});
+                });
 
-});
+        });
 
 </script>
 

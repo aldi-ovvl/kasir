@@ -12,7 +12,7 @@ include "../includes/sidebar.php";
 |--------------------------------------------------------------------------
 */
 
-if(!isset($_SESSION['cart'])){
+if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
@@ -32,12 +32,12 @@ $last = $qtrx->fetchColumn();
 $last++;
 
 $no_transaksi =
-"TRX".str_pad(
-$last,
-5,
-"0",
-STR_PAD_LEFT
-);
+    "TRX" . str_pad(
+        $last,
+        5,
+        "0",
+        STR_PAD_LEFT
+    );
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ STR_PAD_LEFT
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['tambah_cart'])){
+if (isset($_POST['tambah_cart'])) {
 
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
@@ -60,7 +60,7 @@ if(isset($_POST['tambah_cart'])){
 
     $produk = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($produk){
+    if ($produk) {
 
         $_SESSION['cart'][] = [
 
@@ -88,14 +88,14 @@ if(isset($_POST['tambah_cart'])){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_GET['hapus_cart'])){
+if (isset($_GET['hapus_cart'])) {
 
     $index = $_GET['hapus_cart'];
 
     unset($_SESSION['cart'][$index]);
 
     $_SESSION['cart'] =
-    array_values($_SESSION['cart']);
+        array_values($_SESSION['cart']);
 
     echo "
     <script>
@@ -110,7 +110,7 @@ if(isset($_GET['hapus_cart'])){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['simpan_transaksi'])){
+if (isset($_POST['simpan_transaksi'])) {
 
     $total = $_POST['total'];
     $bayar = $_POST['bayar'];
@@ -140,11 +140,14 @@ if(isset($_POST['simpan_transaksi'])){
         $user_id
 
     ]);
+    $idTransaksi = $pdo->lastInsertId();
 
-    $id_transaksi =
-    $pdo->lastInsertId();
+    header(
+        "Location: struk.php?id=" . $idTransaksi
+    );
+    exit;
 
-    foreach($_SESSION['cart'] as $item){
+    foreach ($_SESSION['cart'] as $item) {
 
         $detail = $pdo->prepare("
         INSERT INTO detail_transaksi
@@ -168,6 +171,7 @@ if(isset($_POST['simpan_transaksi'])){
             $item['subtotal']
 
         ]);
+
 
         /*
         |--------------------------------------------------------------------------
@@ -213,310 +217,272 @@ if(isset($_POST['simpan_transaksi'])){
 
 <div class="col-md-10 p-4">
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white">
 
-<h5 class="mb-0">
+            <h5 class="mb-0">
 
-Transaksi Kasir
+                Transaksi Kasir
 
-</h5>
+            </h5>
 
-</div>
+        </div>
 
-<div class="card-body">
+        <div class="card-body">
 
-<div class="row">
+            <div class="row">
 
-<div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3">
 
-<label>No Transaksi</label>
+                    <label>No Transaksi</label>
 
-<input
-type="text"
-class="form-control"
-value="<?= $no_transaksi ?>"
-readonly>
+                    <input type="text" class="form-control" value="<?= $no_transaksi ?>" readonly>
 
-</div>
+                </div>
 
-<form method="POST">
+                <form method="POST">
 
-<div class="row">
+                    <div class="row">
 
-<div class="col-md-5">
+                        <div class="col-md-5">
 
-<label>Produk</label>
+                            <label>Produk</label>
 
-<select
-name="id_produk"
-class="form-select"
-required>
+                            <select name="id_produk" class="form-select" required>
 
-<option value="">
-Pilih Produk
-</option>
+                                <option value="">
+                                    Pilih Produk
+                                </option>
 
-<?php
+                                <?php
 
-$produk = $pdo->query("
+                                $produk = $pdo->query("
 SELECT *
 FROM produk
 WHERE stok > 0
 ORDER BY nama_produk ASC
 ");
 
-while($p = $produk->fetch()):
+                                while ($p = $produk->fetch()):
 
-?>
+                                    ?>
 
-<option
-value="<?= $p['id_produk']; ?>">
+                                    <option value="<?= $p['id_produk']; ?>">
 
-<?= $p['nama_produk']; ?>
--
-Rp <?= number_format($p['harga_jual']); ?>
+                                        <?= $p['nama_produk']; ?>
+                                        -
+                                        Rp <?= number_format($p['harga_jual']); ?>
 
-</option>
+                                    </option>
 
-<?php endwhile; ?>
+                                <?php endwhile; ?>
 
-</select>
+                            </select>
 
-</div>
+                        </div>
 
-<div class="col-md-3">
+                        <div class="col-md-3">
 
-<label>Qty</label>
+                            <label>Qty</label>
 
-<input
-type="number"
-name="qty"
-class="form-control"
-value="1"
-required>
+                            <input type="number" name="qty" class="form-control" value="1" required>
 
-</div>
+                        </div>
 
-<div class="col-md-2 d-flex align-items-end">
+                        <div class="col-md-2 d-flex align-items-end">
 
-<button
-type="submit"
-name="tambah_cart"
-class="btn btn-success">
+                            <button type="submit" name="tambah_cart" class="btn btn-success">
 
-Tambah
+                                Tambah
 
-</button>
+                            </button>
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
-</form>
+                </form>
 
-<hr><?php
+                <hr>
+                <?php
 
-$total = 0;
+                $total = 0;
 
-?>
+                ?>
 
-<table class="table table-bordered">
+                <table class="table table-bordered">
 
-<thead class="table-dark">
+                    <thead class="table-dark">
 
-<tr>
+                        <tr>
 
-<th>No</th>
-<th>Produk</th>
-<th>Harga</th>
-<th>Qty</th>
-<th>Subtotal</th>
-<th>Aksi</th>
+                            <th>No</th>
+                            <th>Produk</th>
+                            <th>Harga</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                            <th>Aksi</th>
 
-</tr>
+                        </tr>
 
-</thead>
+                    </thead>
 
-<tbody>
+                    <tbody>
 
-<?php
+                        <?php
 
-$no = 1;
+                        $no = 1;
 
-if(!empty($_SESSION['cart'])):
+                        if (!empty($_SESSION['cart'])):
 
-foreach($_SESSION['cart'] as $index => $item):
+                            foreach ($_SESSION['cart'] as $index => $item):
 
-$total += $item['subtotal'];
+                                $total += $item['subtotal'];
 
-?>
+                                ?>
 
-<tr>
+                                <tr>
 
-<td><?= $no++; ?></td>
+                                    <td><?= $no++; ?></td>
 
-<td><?= $item['nama_produk']; ?></td>
+                                    <td><?= $item['nama_produk']; ?></td>
 
-<td>
-Rp <?= number_format($item['harga'],0,',','.'); ?>
-</td>
+                                    <td>
+                                        Rp <?= number_format($item['harga'], 0, ',', '.'); ?>
+                                    </td>
 
-<td><?= $item['qty']; ?></td>
+                                    <td><?= $item['qty']; ?></td>
 
-<td>
-Rp <?= number_format($item['subtotal'],0,',','.'); ?>
-</td>
+                                    <td>
+                                        Rp <?= number_format($item['subtotal'], 0, ',', '.'); ?>
+                                    </td>
 
-<td>
+                                    <td>
 
-<a
-href="?hapus_cart=<?= $index; ?>"
-class="btn btn-danger btn-sm">
+                                        <a href="?hapus_cart=<?= $index; ?>" class="btn btn-danger btn-sm">
 
-Hapus
+                                            Hapus
 
-</a>
+                                        </a>
 
-</td>
+                                    </td>
 
-</tr>
+                                </tr>
 
-<?php
+                                <?php
 
-endforeach;
+                            endforeach;
 
-endif;
+                        endif;
 
-?>
+                        ?>
 
-</tbody>
+                    </tbody>
 
-<tfoot>
+                    <tfoot>
 
-<tr>
+                        <tr>
 
-<th colspan="4" class="text-end">
+                            <th colspan="4" class="text-end">
 
-TOTAL
+                                TOTAL
 
-</th>
+                            </th>
 
-<th colspan="2">
+                            <th colspan="2">
 
-Rp <?= number_format($total,0,',','.'); ?>
+                                Rp <?= number_format($total, 0, ',', '.'); ?>
 
-</th>
+                            </th>
 
-</tr>
+                        </tr>
 
-</tfoot>
+                    </tfoot>
 
-</table>
+                </table>
 
-<form method="POST">
+                <form method="POST">
 
-<input
-type="hidden"
-name="total"
-id="total"
-value="<?= $total; ?>">
+                    <input type="hidden" name="total" id="total" value="<?= $total; ?>">
 
-<div class="row">
+                    <div class="row">
 
-<div class="col-md-4">
+                        <div class="col-md-4">
 
-<label>Total</label>
+                            <label>Total</label>
 
-<input
-type="text"
-class="form-control"
-value="Rp <?= number_format($total,0,',','.'); ?>"
-readonly>
+                            <input type="text" class="form-control" value="Rp <?= number_format($total, 0, ',', '.'); ?>"
+                                readonly>
 
-</div>
+                        </div>
 
-<div class="col-md-4">
+                        <div class="col-md-4">
 
-<label>Bayar</label>
+                            <label>Bayar</label>
 
-<input
-type="number"
-name="bayar"
-id="bayar"
-class="form-control"
-required>
+                            <input type="number" name="bayar" id="bayar" class="form-control" required>
 
-</div>
+                        </div>
 
-<div class="col-md-4">
+                        <div class="col-md-4">
 
-<label>Kembalian</label>
+                            <label>Kembalian</label>
 
-<input
-type="number"
-name="kembalian"
-id="kembalian"
-class="form-control"
-readonly>
+                            <input type="number" name="kembalian" id="kembalian" class="form-control" readonly>
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
-<div class="mt-3">
+                    <div class="mt-3">
 
-<button
-type="submit"
-name="simpan_transaksi"
-class="btn btn-primary">
+                        <button type="submit" name="simpan_transaksi" class="btn btn-primary">
 
-Simpan Transaksi
+                            Simpan Transaksi
 
-</button>
+                        </button>
 
-</div>
+                    </div>
 
-</form>
+                </form>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<script>
+    <script>
 
-let bayar =
-document.getElementById('bayar');
+        let bayar =
+            document.getElementById('bayar');
 
-let total =
-document.getElementById('total');
+        let total =
+            document.getElementById('total');
 
-let kembalian =
-document.getElementById('kembalian');
+        let kembalian =
+            document.getElementById('kembalian');
 
-bayar.addEventListener(
-'keyup',
-function(){
+        bayar.addEventListener(
+            'keyup',
+            function () {
 
-let hasil =
+                let hasil =
 
-parseInt(this.value || 0)
+                    parseInt(this.value || 0)
 
--
+                    -
 
-parseInt(total.value || 0);
+                    parseInt(total.value || 0);
 
-kembalian.value = hasil;
+                kembalian.value = hasil;
 
-}
-);
+            }
+        );
 
-</script>
+    </script>
 
-<?php
-include "../includes/footer.php";
-?>
-
+    <?php
+    include "../includes/footer.php";
+    ?>

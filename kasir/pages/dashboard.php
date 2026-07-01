@@ -7,183 +7,183 @@ include "../includes/header.php";
 include "../includes/sidebar.php";
 
 $totalProduk = $pdo
-->query("SELECT COUNT(*) FROM produk")
-->fetchColumn();
+    ->query("SELECT COUNT(*) FROM produk")
+    ->fetchColumn();
 
 $totalKategori = $pdo
-->query("SELECT COUNT(*) FROM kategori")
-->fetchColumn();
+    ->query("SELECT COUNT(*) FROM kategori")
+    ->fetchColumn();
 
 $totalTransaksi = $pdo
-->query("
+    ->query("
 SELECT COUNT(*)
 FROM transaksi
 WHERE DATE(tanggal)=CURDATE()
 ")
-->fetchColumn();
+    ->fetchColumn();
 
 $totalPendapatan = $pdo
-->query("
+    ->query("
 SELECT IFNULL(SUM(total),0)
 FROM transaksi
 WHERE DATE(tanggal)=CURDATE()
 ")
-->fetchColumn();
+    ->fetchColumn();
 
 ?>
 
 <div class="col-md-10 p-4">
 
-<h3 class="mb-4">
+    <h3 class="mb-4">
 
-Dashboard
+        Dashboard
 
-</h3>
+    </h3>
 
-<div class="row">
+    <div class="row">
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card card-dashboard">
+            <div class="card card-dashboard">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Total Produk</h6>
+                    <h6>Total Produk</h6>
 
-<h2>
+                    <h2>
 
-<?= $totalProduk ?>
+                        <?= $totalProduk ?>
 
-</h2>
+                    </h2>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card card-dashboard">
+            <div class="card card-dashboard">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Total Kategori</h6>
+                    <h6>Total Kategori</h6>
 
-<h2>
+                    <h2>
 
-<?= $totalKategori ?>
+                        <?= $totalKategori ?>
 
-</h2>
+                    </h2>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card card-dashboard">
+            <div class="card card-dashboard">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Transaksi Hari Ini</h6>
+                    <h6>Transaksi Hari Ini</h6>
 
-<h2>
+                    <h2>
 
-<?= $totalTransaksi ?>
+                        <?= $totalTransaksi ?>
 
-</h2>
+                    </h2>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card card-dashboard">
+            <div class="card card-dashboard">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Pendapatan Hari Ini</h6>
+                    <h6>Pendapatan Hari Ini</h6>
 
-<h4>
+                    <h4>
 
-Rp <?= number_format($totalPendapatan) ?>
+                        Rp <?= number_format($totalPendapatan) ?>
 
-</h4>
+                    </h4>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="card mt-4">
+    <div class="card mt-4">
 
-<div class="card-header">
+        <div class="card-header">
 
-Grafik Penjualan
+            Grafik Penjualan
 
-</div>
+        </div>
 
-<div class="card-body">
+        <div class="card-body">
 
-<canvas id="grafikPenjualan"></canvas>
+            <canvas id="grafikPenjualan"></canvas>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <script>
 
-const ctx =
-document.getElementById(
-'grafikPenjualan'
-);
+    const ctx =
+        document.getElementById(
+            'grafikPenjualan'
+        );
 
-new Chart(ctx,{
+    new Chart(ctx, {
 
-type:'bar',
+        type: 'bar',
 
-data:{
+        data: {
 
-labels:[
-'Sen',
-'Sel',
-'Rab',
-'Kam',
-'Jum',
-'Sab',
-'Min'
-],
+            labels: [
+                'Sen',
+                'Sel',
+                'Rab',
+                'Kam',
+                'Jum',
+                'Sab',
+                'Min'
+            ],
 
-datasets:[{
+            datasets: [{
 
-label:'Penjualan',
+                label: 'Penjualan',
 
-data:[
-12,
-19,
-3,
-5,
-8,
-14,
-10
-]
+                data: [
+                    12,
+                    19,
+                    3,
+                    5,
+                    8,
+                    14,
+                    10
+                ]
 
-}]
+            }]
 
-}
+        }
 
-});
+    });
 
 </script>
 

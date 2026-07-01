@@ -10,12 +10,12 @@ include "../includes/sidebar.php";
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['tambah'])){
+if (isset($_POST['tambah'])) {
 
-    $nama     = trim($_POST['nama']);
+    $nama = trim($_POST['nama']);
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    $role     = $_POST['role'];
+    $role = $_POST['role'];
 
     $cek = $pdo->prepare("
         SELECT id
@@ -25,7 +25,7 @@ if(isset($_POST['tambah'])){
 
     $cek->execute([$username]);
 
-    if($cek->rowCount() > 0){
+    if ($cek->rowCount() > 0) {
 
         echo "
         <script>
@@ -37,7 +37,7 @@ if(isset($_POST['tambah'])){
         </script>
         ";
 
-    }else{
+    } else {
 
         $hash = password_hash(
             $password,
@@ -85,14 +85,14 @@ if(isset($_POST['tambah'])){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['update'])){
+if (isset($_POST['update'])) {
 
-    $id       = $_POST['id'];
-    $nama     = trim($_POST['nama']);
+    $id = $_POST['id'];
+    $nama = trim($_POST['nama']);
     $username = trim($_POST['username']);
-    $role     = $_POST['role'];
+    $role = $_POST['role'];
 
-    if(!empty($_POST['password'])){
+    if (!empty($_POST['password'])) {
 
         $hash = password_hash(
             $_POST['password'],
@@ -117,7 +117,7 @@ if(isset($_POST['update'])){
             $id
         ]);
 
-    }else{
+    } else {
 
         $stmt = $pdo->prepare("
             UPDATE users
@@ -155,11 +155,11 @@ if(isset($_POST['update'])){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_GET['hapus'])){
+if (isset($_GET['hapus'])) {
 
     $id = $_GET['hapus'];
 
-    if($id == $_SESSION['id']){
+    if ($id == $_SESSION['id']) {
 
         echo "
         <script>
@@ -173,7 +173,7 @@ if(isset($_GET['hapus'])){
         </script>
         ";
 
-    }else{
+    } else {
 
         $stmt = $pdo->prepare("
             DELETE FROM users
@@ -200,406 +200,349 @@ if(isset($_GET['hapus'])){
 
 <div class="col-md-10 p-4">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-```
-<h3>Data Users</h3>
+        ```
+        <h3>Data Users</h3>
 
-<button
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#modalTambah">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
 
-    <i class="bi bi-plus-circle"></i>
-    Tambah User
+            <i class="bi bi-plus-circle"></i>
+            Tambah User
 
-</button>
-```
+        </button>
+        ```
 
-</div>
+    </div>
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-body">
+        <div class="card-body">
 
-<table class="table table-bordered table-striped datatable">
+            <table class="table table-bordered table-striped datatable">
 
-<thead>
+                <thead>
 
-<tr>
+                    <tr>
 
-```
-<th>No</th>
-<th>Nama</th>
-<th>Username</th>
-<th>Role</th>
-<th>Tanggal Dibuat</th>
-<th width="130">Aksi</th>
-```
+                        ```
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Tanggal Dibuat</th>
+                        <th width="130">Aksi</th>
+                        ```
 
-</tr>
+                    </tr>
 
-</thead>
+                </thead>
 
-<tbody>
+                <tbody>
 
-<?php
+                    <?php
 
-$no = 1;
+                    $no = 1;
 
-$query = $pdo->query("
+                    $query = $pdo->query("
     SELECT *
     FROM users
     ORDER BY id DESC
 ");
 
-while($row = $query->fetch(PDO::FETCH_ASSOC)):
+                    while ($row = $query->fetch(PDO::FETCH_ASSOC)):
 
-?>
+                        ?>
 
-<tr>
+                        <tr>
 
-<td><?= $no++; ?></td>
+                            <td><?= $no++; ?></td>
 
-<td><?= htmlspecialchars($row['nama']); ?></td>
+                            <td><?= htmlspecialchars($row['nama']); ?></td>
 
-<td><?= htmlspecialchars($row['username']); ?></td>
+                            <td><?= htmlspecialchars($row['username']); ?></td>
 
-<td>
+                            <td>
 
-<?php if($row['role']=='admin'): ?>
+                                <?php if ($row['role'] == 'admin'): ?>
 
-<span class="badge bg-danger">
-Admin
-</span>
+                                    <span class="badge bg-danger">
+                                        Admin
+                                    </span>
 
-<?php else: ?>
+                                <?php else: ?>
 
-<span class="badge bg-success">
-Kasir
-</span>
+                                    <span class="badge bg-success">
+                                        Kasir
+                                    </span>
 
-<?php endif; ?>
+                                <?php endif; ?>
 
-</td>
+                            </td>
 
-<td>
+                            <td>
 
-<?= date(
-'d-m-Y H:i',
-strtotime($row['created_at'])
-); ?>
+                                <?= date(
+                                    'd-m-Y H:i',
+                                    strtotime($row['created_at'])
+                                ); ?>
 
-</td>
+                            </td>
 
-<td>
+                            <td>
 
-<button
-class="btn btn-warning btn-sm"
-data-bs-toggle="modal"
-data-bs-target="#edit<?= $row['id']; ?>">
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#edit<?= $row['id']; ?>">
 
-<i class="bi bi-pencil-square"></i>
+                                    <i class="bi bi-pencil-square"></i>
 
-</button>
+                                </button>
 
-<a
-href="?hapus=<?= $row['id']; ?>"
-class="btn btn-danger btn-sm btnHapus">
+                                <a href="?hapus=<?= $row['id']; ?>" class="btn btn-danger btn-sm btnHapus">
 
-<i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash"></i>
 
-</a>
+                                </a>
 
-</td>
+                            </td>
 
-</tr>
+                        </tr>
 
-<!-- MODAL EDIT -->
+                        <!-- MODAL EDIT -->
 
-<div
-class="modal fade"
-id="edit<?= $row['id']; ?>">
+                        <div class="modal fade" id="edit<?= $row['id']; ?>">
 
-<div class="modal-dialog">
+                            <div class="modal-dialog">
 
-<div class="modal-content">
+                                <div class="modal-content">
 
-<form method="POST">
+                                    <form method="POST">
 
-<div class="modal-header bg-warning">
+                                        <div class="modal-header bg-warning">
 
-<h5 class="modal-title">
-Edit User
-</h5>
+                                            <h5 class="modal-title">
+                                                Edit User
+                                            </h5>
 
-<button
-type="button"
-class="btn-close"
-data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 
-</div>
+                                        </div>
 
-<div class="modal-body">
+                                        <div class="modal-body">
 
-<input
-type="hidden"
-name="id"
-value="<?= $row['id']; ?>">
+                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
 
-<div class="mb-3">
+                                            <div class="mb-3">
 
-<label>Nama</label>
+                                                <label>Nama</label>
 
-<input
-type="text"
-name="nama"
-class="form-control"
-value="<?= $row['nama']; ?>"
-required>
+                                                <input type="text" name="nama" class="form-control"
+                                                    value="<?= $row['nama']; ?>" required>
 
-</div>
+                                            </div>
 
-<div class="mb-3">
+                                            <div class="mb-3">
 
-<label>Username</label>
+                                                <label>Username</label>
 
-<input
-type="text"
-name="username"
-class="form-control"
-value="<?= $row['username']; ?>"
-required>
+                                                <input type="text" name="username" class="form-control"
+                                                    value="<?= $row['username']; ?>" required>
 
-</div>
+                                            </div>
 
-<div class="mb-3">
+                                            <div class="mb-3">
 
-<label>Password Baru</label>
+                                                <label>Password Baru</label>
 
-<input
-type="password"
-name="password"
-class="form-control">
+                                                <input type="password" name="password" class="form-control">
 
-<small class="text-muted">
-Kosongkan jika tidak ingin mengganti password
-</small>
+                                                <small class="text-muted">
+                                                    Kosongkan jika tidak ingin mengganti password
+                                                </small>
 
-</div>
+                                            </div>
 
-<div class="mb-3">
+                                            <div class="mb-3">
 
-<label>Role</label>
+                                                <label>Role</label>
 
-<select
-name="role"
-class="form-select">
+                                                <select name="role" class="form-select">
 
-<option
-value="admin"
-<?= $row['role']=='admin' ? 'selected':''; ?>>
+                                                    <option value="admin" <?= $row['role'] == 'admin' ? 'selected' : ''; ?>>
 
-Admin
+                                                        Admin
 
-</option>
+                                                    </option>
 
-<option
-value="kasir"
-<?= $row['role']=='kasir' ? 'selected':''; ?>>
+                                                    <option value="kasir" <?= $row['role'] == 'kasir' ? 'selected' : ''; ?>>
 
-Kasir
+                                                        Kasir
 
-</option>
+                                                    </option>
 
-</select>
+                                                </select>
 
-</div>
+                                            </div>
 
-</div>
+                                        </div>
 
-<div class="modal-footer">
+                                        <div class="modal-footer">
 
-<button
-type="submit"
-name="update"
-class="btn btn-success">
+                                            <button type="submit" name="update" class="btn btn-success">
 
-Update User
+                                                Update User
 
-</button>
+                                            </button>
 
-</div>
+                                        </div>
 
-</form>
+                                    </form>
 
-</div>
+                                </div>
 
-</div>
+                            </div>
 
-</div>
+                        </div>
 
-<?php endwhile; ?>
+                    <?php endwhile; ?>
 
-</tbody>
+                </tbody>
 
-</table>
+            </table>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <!-- MODAL TAMBAH -->
 
-<div
-class="modal fade"
-id="modalTambah">
+<div class="modal fade" id="modalTambah">
 
-<div class="modal-dialog">
+    <div class="modal-dialog">
 
-<div class="modal-content">
+        <div class="modal-content">
 
-<form method="POST">
+            <form method="POST">
 
-<div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-primary text-white">
 
-<h5 class="modal-title">
+                    <h5 class="modal-title">
 
-Tambah User
+                        Tambah User
 
-</h5>
+                    </h5>
 
-<button
-type="button"
-class="btn-close btn-close-white"
-data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 
-</div>
+                </div>
 
-<div class="modal-body">
+                <div class="modal-body">
 
-<div class="mb-3">
+                    <div class="mb-3">
 
-<label>Nama</label>
+                        <label>Nama</label>
 
-<input
-type="text"
-name="nama"
-class="form-control"
-required>
+                        <input type="text" name="nama" class="form-control" required>
 
-</div>
+                    </div>
 
-<div class="mb-3">
+                    <div class="mb-3">
 
-<label>Username</label>
+                        <label>Username</label>
 
-<input
-type="text"
-name="username"
-class="form-control"
-required>
+                        <input type="text" name="username" class="form-control" required>
 
-</div>
+                    </div>
 
-<div class="mb-3">
+                    <div class="mb-3">
 
-<label>Password</label>
+                        <label>Password</label>
 
-<input
-type="password"
-name="password"
-class="form-control"
-required>
+                        <input type="password" name="password" class="form-control" required>
 
-</div>
+                    </div>
 
-<div class="mb-3">
+                    <div class="mb-3">
 
-<label>Role</label>
+                        <label>Role</label>
 
-<select
-name="role"
-class="form-select">
+                        <select name="role" class="form-select">
 
-<option value="admin">
-Admin
-</option>
+                            <option value="admin">
+                                Admin
+                            </option>
 
-<option value="kasir">
-Kasir
-</option>
+                            <option value="kasir">
+                                Kasir
+                            </option>
 
-</select>
+                        </select>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
-<div class="modal-footer">
+                <div class="modal-footer">
 
-<button
-type="submit"
-name="tambah"
-class="btn btn-primary">
+                    <button type="submit" name="tambah" class="btn btn-primary">
 
-Simpan User
+                        Simpan User
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-</form>
+            </form>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <script>
 
-document
-.querySelectorAll('.btnHapus')
-.forEach(function(btn){
+    document
+        .querySelectorAll('.btnHapus')
+        .forEach(function (btn) {
 
-btn.addEventListener(
-'click',
-function(e){
+            btn.addEventListener(
+                'click',
+                function (e) {
 
-e.preventDefault();
+                    e.preventDefault();
 
-let url = this.href;
+                    let url = this.href;
 
-Swal.fire({
+                    Swal.fire({
 
-title:'Hapus User?',
+                        title: 'Hapus User?',
 
-text:'Data tidak dapat dikembalikan',
+                        text: 'Data tidak dapat dikembalikan',
 
-icon:'warning',
+                        icon: 'warning',
 
-showCancelButton:true,
+                        showCancelButton: true,
 
-confirmButtonText:'Ya, Hapus',
+                        confirmButtonText: 'Ya, Hapus',
 
-cancelButtonText:'Batal'
+                        cancelButtonText: 'Batal'
 
-}).then((result)=>{
+                    }).then((result) => {
 
-if(result.isConfirmed){
+                        if (result.isConfirmed) {
 
-window.location = url;
+                            window.location = url;
 
-}
+                        }
 
-});
+                    });
 
-});
+                });
 
-});
+        });
 
 </script>
 

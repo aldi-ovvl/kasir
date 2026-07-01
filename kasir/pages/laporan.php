@@ -4,7 +4,7 @@ include "../config/koneksi.php";
 include "../includes/header.php";
 include "../includes/sidebar.php";
 
-$awal  = $_GET['awal'] ?? date('Y-m-01');
+$awal = $_GET['awal'] ?? date('Y-m-01');
 $akhir = $_GET['akhir'] ?? date('Y-m-d');
 
 /*
@@ -23,7 +23,7 @@ WHERE DATE(tanggal)
 BETWEEN ? AND ?
 ");
 
-$stat->execute([$awal,$akhir]);
+$stat->execute([$awal, $akhir]);
 
 $s = $stat->fetch(PDO::FETCH_ASSOC);
 
@@ -36,7 +36,7 @@ WHERE DATE(t.tanggal)
 BETWEEN ? AND ?
 ");
 
-$produkTerjual->execute([$awal,$akhir]);
+$produkTerjual->execute([$awal, $akhir]);
 
 $pj = $produkTerjual->fetch(PDO::FETCH_ASSOC);
 
@@ -58,7 +58,7 @@ BETWEEN ? AND ?
 ORDER BY t.id_transaksi DESC
 ");
 
-$transaksi->execute([$awal,$akhir]);
+$transaksi->execute([$awal, $akhir]);
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +84,7 @@ ORDER BY total_terjual DESC
 LIMIT 10
 ");
 
-$terlaris->execute([$awal,$akhir]);
+$terlaris->execute([$awal, $akhir]);
 
 /*
 |--------------------------------------------------------------------------
@@ -103,12 +103,12 @@ GROUP BY DATE(tanggal)
 ORDER BY DATE(tanggal)
 ");
 
-$grafik->execute([$awal,$akhir]);
+$grafik->execute([$awal, $akhir]);
 
 $labels = [];
 $dataGrafik = [];
 
-while($g = $grafik->fetch(PDO::FETCH_ASSOC)){
+while ($g = $grafik->fetch(PDO::FETCH_ASSOC)) {
 
     $labels[] = date(
         'd/m',
@@ -122,309 +122,300 @@ while($g = $grafik->fetch(PDO::FETCH_ASSOC)){
 
 <div class="col-md-10 p-4">
 
-<h3 class="mb-4">
-Laporan Penjualan
-</h3>
+    <h3 class="mb-4">
+        Laporan Penjualan
+    </h3>
 
-<div class="card mb-4">
+    <div class="card mb-4">
 
-<div class="card-body">
+        <div class="card-body">
 
-<form method="GET">
+            <form method="GET">
 
-<div class="row">
+                <div class="row">
 
-<div class="col-md-3">
+                    <div class="col-md-3">
 
-<label>Tanggal Awal</label>
+                        <label>Tanggal Awal</label>
 
-<input
-type="date"
-name="awal"
-value="<?= $awal ?>"
-class="form-control">
+                        <input type="date" name="awal" value="<?= $awal ?>" class="form-control">
 
-</div>
+                    </div>
 
-<div class="col-md-3">
+                    <div class="col-md-3">
 
-<label>Tanggal Akhir</label>
+                        <label>Tanggal Akhir</label>
 
-<input
-type="date"
-name="akhir"
-value="<?= $akhir ?>"
-class="form-control">
+                        <input type="date" name="akhir" value="<?= $akhir ?>" class="form-control">
 
-</div>
+                    </div>
 
-<div class="col-md-3">
+                    <div class="col-md-3">
 
-<label> </label>
+                        <label> </label>
 
-<button
-class="btn btn-primary d-block">
+                        <button class="btn btn-primary d-block">
 
-Tampilkan
+                            Tampilkan
 
-</button>
+                        </button>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
-</form>
+            </form>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="row mb-4">
+    <div class="row mb-4">
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card shadow">
+            <div class="card shadow">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Total Transaksi</h6>
+                    <h6>Total Transaksi</h6>
 
-<h3><?= $s['total_transaksi'] ?></h3>
+                    <h3><?= $s['total_transaksi'] ?></h3>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card shadow">
+            <div class="card shadow">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Total Pendapatan</h6>
+                    <h6>Total Pendapatan</h6>
 
-<h5>
-Rp <?= number_format($s['total_pendapatan']) ?>
-</h5>
+                    <h5>
+                        Rp <?= number_format($s['total_pendapatan']) ?>
+                    </h5>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card shadow">
+            <div class="card shadow">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Produk Terjual</h6>
+                    <h6>Produk Terjual</h6>
 
-<h3><?= $pj['total_produk'] ?></h3>
+                    <h3><?= $pj['total_produk'] ?></h3>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-3">
 
-<div class="card shadow">
+            <div class="card shadow">
 
-<div class="card-body">
+                <div class="card-body">
 
-<h6>Rata-rata Transaksi</h6>
+                    <h6>Rata-rata Transaksi</h6>
 
-<h5>
-Rp <?= number_format($s['rata_transaksi']) ?>
-</h5>
+                    <h5>
+                        Rp <?= number_format($s['rata_transaksi']) ?>
+                    </h5>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="card mb-4">
+    <div class="card mb-4">
 
-<div class="card-header">
+        <div class="card-header">
 
-Grafik Penjualan
+            Grafik Penjualan
 
-</div>
+        </div>
 
-<div class="card-body">
+        <div class="card-body">
 
-<canvas id="grafikLaporan"></canvas>
+            <canvas id="grafikLaporan"></canvas>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="card mb-4">
+    <div class="card mb-4">
 
-<div class="card-header">
+        <div class="card-header">
 
-Data Transaksi
+            Data Transaksi
 
-</div>
+        </div>
 
-<div class="card-body">
+        <div class="card-body">
 
-<table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped">
 
-<thead>
+                <thead>
 
-<tr>
+                    <tr>
 
-<th>No</th>
-<th>No Transaksi</th>
-<th>Tanggal</th>
-<th>Kasir</th>
-<th>Total</th>
-<th>Bayar</th>
-<th>Kembalian</th>
+                        <th>No</th>
+                        <th>No Transaksi</th>
+                        <th>Tanggal</th>
+                        <th>Kasir</th>
+                        <th>Total</th>
+                        <th>Bayar</th>
+                        <th>Kembalian</th>
 
-</tr>
+                    </tr>
 
-</thead>
+                </thead>
 
-<tbody>
+                <tbody>
 
-<?php
-$no=1;
+                    <?php
+                    $no = 1;
 
-while($row=$transaksi->fetch(PDO::FETCH_ASSOC)):
-?>
+                    while ($row = $transaksi->fetch(PDO::FETCH_ASSOC)):
+                        ?>
 
-<tr>
+                        <tr>
 
-<td><?= $no++ ?></td>
+                            <td><?= $no++ ?></td>
 
-<td><?= $row['no_transaksi'] ?></td>
+                            <td><?= $row['no_transaksi'] ?></td>
 
-<td><?= $row['tanggal'] ?></td>
+                            <td><?= $row['tanggal'] ?></td>
 
-<td><?= $row['kasir'] ?></td>
+                            <td><?= $row['kasir'] ?></td>
 
-<td>
-Rp <?= number_format($row['total']) ?>
-</td>
+                            <td>
+                                Rp <?= number_format($row['total']) ?>
+                            </td>
 
-<td>
-Rp <?= number_format($row['bayar']) ?>
-</td>
+                            <td>
+                                Rp <?= number_format($row['bayar']) ?>
+                            </td>
 
-<td>
-Rp <?= number_format($row['kembalian']) ?>
-</td>
+                            <td>
+                                Rp <?= number_format($row['kembalian']) ?>
+                            </td>
 
-</tr>
+                        </tr>
 
-<?php endwhile; ?>
+                    <?php endwhile; ?>
 
-</tbody>
+                </tbody>
 
-</table>
+            </table>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card">
 
-<div class="card-header">
+        <div class="card-header">
 
-Top 10 Produk Terlaris
+            Top 10 Produk Terlaris
 
-</div>
+        </div>
 
-<div class="card-body">
+        <div class="card-body">
 
-<table class="table table-bordered">
+            <table class="table table-bordered">
 
-<thead>
+                <thead>
 
-<tr>
+                    <tr>
 
-<th>No</th>
-<th>Produk</th>
-<th>Harga</th>
-<th>Stok</th>
-<th>Terjual</th>
+                        <th>No</th>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Terjual</th>
 
-</tr>
+                    </tr>
 
-</thead>
+                </thead>
 
-<tbody>
+                <tbody>
 
-<?php
-$no=1;
+                    <?php
+                    $no = 1;
 
-while($p=$terlaris->fetch(PDO::FETCH_ASSOC)):
-?>
+                    while ($p = $terlaris->fetch(PDO::FETCH_ASSOC)):
+                        ?>
 
-<tr>
+                        <tr>
 
-<td><?= $no++ ?></td>
+                            <td><?= $no++ ?></td>
 
-<td><?= $p['nama_produk'] ?></td>
+                            <td><?= $p['nama_produk'] ?></td>
 
-<td>
-Rp <?= number_format($p['harga_jual']) ?>
-</td>
+                            <td>
+                                Rp <?= number_format($p['harga_jual']) ?>
+                            </td>
 
-<td><?= $p['stok'] ?></td>
+                            <td><?= $p['stok'] ?></td>
 
-<td><?= $p['total_terjual'] ?></td>
+                            <td><?= $p['total_terjual'] ?></td>
 
-</tr>
+                        </tr>
 
-<?php endwhile; ?>
+                    <?php endwhile; ?>
 
-</tbody>
+                </tbody>
 
-</table>
+            </table>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <script>
 
-new Chart(
-document.getElementById(
-'grafikLaporan'
-),
-{
-type:'line',
+    new Chart(
+        document.getElementById(
+            'grafikLaporan'
+        ),
+        {
+            type: 'line',
 
-data:{
+            data: {
 
-labels:
-<?= json_encode($labels); ?>,
+                labels:
+                    <?= json_encode($labels); ?>,
 
-datasets:[{
+                datasets: [{
 
-label:'Penjualan',
+                    label: 'Penjualan',
 
-data:
-<?= json_encode($dataGrafik); ?>
+                    data:
+                        <?= json_encode($dataGrafik); ?>
 
-}]
+                }]
 
-}
+            }
 
-});
+        });
 
 </script>
 

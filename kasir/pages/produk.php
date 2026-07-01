@@ -13,15 +13,15 @@ include "../includes/sidebar.php";
 $qKode = $pdo->query("SELECT MAX(id_produk) as terakhir FROM produk");
 $dataKode = $qKode->fetch(PDO::FETCH_ASSOC);
 
-$nomor = (int)$dataKode['terakhir'] + 1;
+$nomor = (int) $dataKode['terakhir'] + 1;
 
 $kodeOtomatis =
-"PRD".str_pad(
-    $nomor,
-    4,
-    "0",
-    STR_PAD_LEFT
-);
+    "PRD" . str_pad(
+        $nomor,
+        4,
+        "0",
+        STR_PAD_LEFT
+    );
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ $kodeOtomatis =
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['tambah'])){
+if (isset($_POST['tambah'])) {
 
     $kode = $_POST['kode_produk'];
     $nama = $_POST['nama_produk'];
@@ -40,17 +40,17 @@ if(isset($_POST['tambah'])){
 
     $foto = "";
 
-    if(!empty($_FILES['foto']['name'])){
+    if (!empty($_FILES['foto']['name'])) {
 
         $foto =
-        time().'_'.
-        $_FILES['foto']['name'];
+            time() . '_' .
+            $_FILES['foto']['name'];
 
         move_uploaded_file(
 
             $_FILES['foto']['tmp_name'],
 
-            "../assets/img/produk/".$foto
+            "../assets/img/produk/" . $foto
 
         );
 
@@ -111,7 +111,7 @@ if(isset($_POST['tambah'])){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_POST['update'])){
+if (isset($_POST['update'])) {
 
     $id = $_POST['id_produk'];
 
@@ -127,31 +127,31 @@ if(isset($_POST['update'])){
 
     $foto = $fotoLama;
 
-    if(!empty($_FILES['foto']['name'])){
+    if (!empty($_FILES['foto']['name'])) {
 
-        if(
+        if (
             !empty($fotoLama)
             &&
             file_exists(
-                "../assets/img/produk/".$fotoLama
+                "../assets/img/produk/" . $fotoLama
             )
-        ){
+        ) {
 
             unlink(
-                "../assets/img/produk/".$fotoLama
+                "../assets/img/produk/" . $fotoLama
             );
 
         }
 
         $foto =
-        time().'_'.
-        $_FILES['foto']['name'];
+            time() . '_' .
+            $_FILES['foto']['name'];
 
         move_uploaded_file(
 
             $_FILES['foto']['tmp_name'],
 
-            "../assets/img/produk/".$foto
+            "../assets/img/produk/" . $foto
 
         );
 
@@ -211,7 +211,7 @@ if(isset($_POST['update'])){
 |--------------------------------------------------------------------------
 */
 
-if(isset($_GET['hapus'])){
+if (isset($_GET['hapus'])) {
 
     $id = $_GET['hapus'];
 
@@ -225,17 +225,17 @@ if(isset($_GET['hapus'])){
 
     $fotoData = $cek->fetch();
 
-    if(
+    if (
         !empty($fotoData['foto'])
         &&
         file_exists(
-            "../assets/img/produk/".
+            "../assets/img/produk/" .
             $fotoData['foto']
         )
-    ){
+    ) {
 
         unlink(
-            "../assets/img/produk/".
+            "../assets/img/produk/" .
             $fotoData['foto']
         );
 
@@ -272,53 +272,50 @@ if(isset($_GET['hapus'])){
 
 <div class="col-md-10 p-4">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-<h3>Data Produk</h3>
+        <h3>Data Produk</h3>
 
-<button
-class="btn btn-primary"
-data-bs-toggle="modal"
-data-bs-target="#modalTambah">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
 
-<i class="bi bi-plus-circle"></i>
-Tambah Produk
+            <i class="bi bi-plus-circle"></i>
+            Tambah Produk
 
-</button>
+        </button>
 
-</div>
+    </div>
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-body">
+        <div class="card-body">
 
-<table class="table table-bordered table-striped datatable">
+            <table class="table table-bordered table-striped datatable">
 
-<thead>
+                <thead>
 
-<tr>
+                    <tr>
 
-<th>No</th>
-<th>Foto</th>
-<th>Kode</th>
-<th>Nama Produk</th>
-<th>Kategori</th>
-<th>Harga Beli</th>
-<th>Harga Jual</th>
-<th>Stok</th>
-<th width="120">Aksi</th>
+                        <th>No</th>
+                        <th>Foto</th>
+                        <th>Kode</th>
+                        <th>Nama Produk</th>
+                        <th>Kategori</th>
+                        <th>Harga Beli</th>
+                        <th>Harga Jual</th>
+                        <th>Stok</th>
+                        <th width="120">Aksi</th>
 
-</tr>
+                    </tr>
 
-</thead>
+                </thead>
 
-<tbody>
+                <tbody>
 
-<?php
+                    <?php
 
-$no = 1;
+                    $no = 1;
 
-$query = $pdo->query("
+                    $query = $pdo->query("
 
 SELECT
 produk.*,
@@ -334,230 +331,181 @@ ORDER BY id_produk DESC
 
 ");
 
-while(
-$row =
-$query->fetch(PDO::FETCH_ASSOC)
-):
+                    while (
+                        $row =
+                        $query->fetch(PDO::FETCH_ASSOC)
+                    ):
 
-?>
+                        ?>
 
-<tr>
+                        <tr>
 
-<td><?= $no++; ?></td>
+                            <td><?= $no++; ?></td>
 
-<td>
+                            <td>
 
-<?php if(!empty($row['foto'])): ?>
+                                <?php if (!empty($row['foto'])): ?>
 
-<img
-src="../assets/img/produk/<?= $row['foto']; ?>"
-style="
+                                    <img src="../assets/img/produk/<?= $row['foto']; ?>" style="
 width:70px;
 height:70px;
 object-fit:cover;
 border-radius:8px;
 ">
 
-<?php endif; ?>
+                                <?php endif; ?>
 
-</td>
+                            </td>
 
-<td><?= $row['kode_produk']; ?></td>
+                            <td><?= $row['kode_produk']; ?></td>
 
-<td><?= $row['nama_produk']; ?></td>
+                            <td><?= $row['nama_produk']; ?></td>
 
-<td><?= $row['nama_kategori']; ?></td>
+                            <td><?= $row['nama_kategori']; ?></td>
 
-<td>
-Rp <?= number_format($row['harga_beli'],0,',','.'); ?>
-</td>
+                            <td>
+                                Rp <?= number_format($row['harga_beli'], 0, ',', '.'); ?>
+                            </td>
 
-<td>
-Rp <?= number_format($row['harga_jual'],0,',','.'); ?>
-</td>
+                            <td>
+                                Rp <?= number_format($row['harga_jual'], 0, ',', '.'); ?>
+                            </td>
 
-<td><?= $row['stok']; ?></td>
+                            <td><?= $row['stok']; ?></td>
 
-<td>
+                            <td>
 
-<button
-class="btn btn-warning btn-sm"
-data-bs-toggle="modal"
-data-bs-target="#edit<?= $row['id_produk']; ?>">
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#edit<?= $row['id_produk']; ?>">
 
-<i class="bi bi-pencil-square"></i>
+                                    <i class="bi bi-pencil-square"></i>
 
-</button>
+                                </button>
 
-<a
-href="?hapus=<?= $row['id_produk']; ?>"
-class="btn btn-danger btn-sm btnHapus">
+                                <a href="?hapus=<?= $row['id_produk']; ?>" class="btn btn-danger btn-sm btnHapus">
 
-<i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash"></i>
 
-</a>
+                                </a>
 
-</td>
+                            </td>
 
-</tr><!-- MODAL EDIT -->
+                        </tr><!-- MODAL EDIT -->
 
-<div
-class="modal fade"
-id="edit<?= $row['id_produk']; ?>">
+                        <div class="modal fade" id="edit<?= $row['id_produk']; ?>">
 
-<div class="modal-dialog modal-lg">
+                            <div class="modal-dialog modal-lg">
 
-<div class="modal-content">
+                                <div class="modal-content">
 
-<form
-method="POST"
-enctype="multipart/form-data">
+                                    <form method="POST" enctype="multipart/form-data">
 
-<div class="modal-header bg-warning">
+                                        <div class="modal-header bg-warning">
 
-<h5 class="modal-title">
-Edit Produk
-</h5>
+                                            <h5 class="modal-title">
+                                                Edit Produk
+                                            </h5>
 
-<button
-type="button"
-class="btn-close"
-data-bs-dismiss="modal"> </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
 
-</div>
+                                        </div>
 
-<div class="modal-body">
+                                        <div class="modal-body">
 
-<input
-type="hidden"
-name="id_produk"
-value="<?= $row['id_produk']; ?>">
+                                            <input type="hidden" name="id_produk" value="<?= $row['id_produk']; ?>">
 
-<input
-type="hidden"
-name="foto_lama"
-value="<?= $row['foto']; ?>">
+                                            <input type="hidden" name="foto_lama" value="<?= $row['foto']; ?>">
 
-<div class="row">
+                                            <div class="row">
 
-<div class="col-md-6 mb-3">
+                                                <div class="col-md-6 mb-3">
 
-<label>Kode Produk</label>
+                                                    <label>Kode Produk</label>
 
-<input
-type="text"
-name="kode_produk"
-class="form-control"
-value="<?= $row['kode_produk']; ?>"
-readonly>
+                                                    <input type="text" name="kode_produk" class="form-control"
+                                                        value="<?= $row['kode_produk']; ?>" readonly>
 
-</div>
+                                                </div>
 
-<div class="col-md-6 mb-3">
+                                                <div class="col-md-6 mb-3">
 
-<label>Nama Produk</label>
+                                                    <label>Nama Produk</label>
 
-<input
-type="text"
-name="nama_produk"
-class="form-control"
-value="<?= $row['nama_produk']; ?>"
-required>
+                                                    <input type="text" name="nama_produk" class="form-control"
+                                                        value="<?= $row['nama_produk']; ?>" required>
 
-</div>
+                                                </div>
 
-<div class="col-md-6 mb-3">
+                                                <div class="col-md-6 mb-3">
 
-<label>Kategori</label>
+                                                    <label>Kategori</label>
 
-<select
-name="id_kategori"
-class="form-select"
-required>
+                                                    <select name="id_kategori" class="form-select" required>
 
-<?php
+                                                        <?php
 
-$kategoriEdit =
-$pdo->query("
+                                                        $kategoriEdit =
+                                                            $pdo->query("
 SELECT *
 FROM kategori
 ORDER BY nama_kategori ASC
 ");
 
-while($kt = $kategoriEdit->fetch()):
+                                                        while ($kt = $kategoriEdit->fetch()):
 
-?>
+                                                            ?>
 
-<option
-value="<?= $kt['id_kategori']; ?>"
-<?= ($kt['id_kategori']==$row['id_kategori']) ? 'selected' : ''; ?>>
+                                                            <option value="<?= $kt['id_kategori']; ?>"
+                                                                <?= ($kt['id_kategori'] == $row['id_kategori']) ? 'selected' : ''; ?>>
 
-<?= $kt['nama_kategori']; ?>
+                                                                <?= $kt['nama_kategori']; ?>
 
-</option>
+                                                            </option>
 
-<?php endwhile; ?>
+                                                        <?php endwhile; ?>
 
-</select>
+                                                    </select>
 
-</div>
+                                                </div>
 
-<div class="col-md-6 mb-3">
+                                                <div class="col-md-6 mb-3">
 
-<label>Stok</label>
+                                                    <label>Stok</label>
 
-<input
-type="number"
-name="stok"
-class="form-control"
-value="<?= $row['stok']; ?>"
-required>
+                                                    <input type="number" name="stok" class="form-control"
+                                                        value="<?= $row['stok']; ?>" required>
 
-</div>
+                                                </div>
 
-<div class="col-md-6 mb-3">
+                                                <div class="col-md-6 mb-3">
 
-<label>Harga Beli</label>
+                                                    <label>Harga Beli</label>
 
-<input
-type="number"
-name="harga_beli"
-class="form-control"
-value="<?= $row['harga_beli']; ?>"
-required>
+                                                    <input type="number" name="harga_beli" class="form-control"
+                                                        value="<?= $row['harga_beli']; ?>" required>
 
-</div>
+                                                </div>
 
-<div class="col-md-6 mb-3">
+                                                <div class="col-md-6 mb-3">
 
-<label>Harga Jual</label>
+                                                    <label>Harga Jual</label>
 
-<input
-type="number"
-name="harga_jual"
-class="form-control"
-value="<?= $row['harga_jual']; ?>"
-required>
+                                                    <input type="number" name="harga_jual" class="form-control"
+                                                        value="<?= $row['harga_jual']; ?>" required>
 
-</div>
+                                                </div>
 
-<div class="col-md-12">
+                                                <div class="col-md-12">
 
-<label>Foto Produk</label>
+                                                    <label>Foto Produk</label>
 
-<input
-type="file"
-name="foto"
-class="form-control"
-accept="image/*"
-onchange="previewImage(this,'preview<?= $row['id_produk']; ?>')">
+                                                    <input type="file" name="foto" class="form-control" accept="image/*"
+                                                        onchange="previewImage(this,'preview<?= $row['id_produk']; ?>')">
 
-<br>
+                                                    <br>
 
-<img
-id="preview<?= $row['id_produk']; ?>"
-src="../assets/img/produk/<?= $row['foto']; ?>"
-style="
+                                                    <img id="preview<?= $row['id_produk']; ?>"
+                                                        src="../assets/img/produk/<?= $row['foto']; ?>" style="
 width:120px;
 height:120px;
 object-fit:cover;
@@ -565,193 +513,152 @@ border:1px solid #ddd;
 border-radius:10px;
 ">
 
-</div>
+                                                </div>
 
-</div>
+                                            </div>
 
-</div>
+                                        </div>
 
-<div class="modal-footer">
+                                        <div class="modal-footer">
 
-<button
-type="submit"
-name="update"
-class="btn btn-success">
+                                            <button type="submit" name="update" class="btn btn-success">
 
-Update Produk
+                                                Update Produk
 
-</button>
+                                            </button>
 
-</div>
+                                        </div>
 
-</form>
+                                    </form>
 
-</div>
+                                </div>
 
-</div>
+                            </div>
 
-</div>
+                        </div>
 
-<?php endwhile; ?>
+                    <?php endwhile; ?>
 
-</tbody>
+                </tbody>
 
-</table>
+            </table>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <!-- MODAL TAMBAH -->
 
-<div
-class="modal fade"
-id="modalTambah">
+<div class="modal fade" id="modalTambah">
 
-<div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg">
 
-<div class="modal-content">
+        <div class="modal-content">
 
-<form
-method="POST"
-enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data">
 
-<div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-primary text-white">
 
-<h5 class="modal-title">
-Tambah Produk
-</h5>
+                    <h5 class="modal-title">
+                        Tambah Produk
+                    </h5>
 
-<button
-type="button"
-class="btn-close btn-close-white"
-data-bs-dismiss="modal"> </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"> </button>
 
-</div>
+                </div>
 
-<div class="modal-body">
+                <div class="modal-body">
 
-<div class="row">
+                    <div class="row">
 
-<div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-<label>Kode Produk</label>
+                            <label>Kode Produk</label>
 
-<input
-type="text"
-name="kode_produk"
-class="form-control"
-value="<?= $kodeOtomatis ?>"
-readonly>
+                            <input type="text" name="kode_produk" class="form-control" value="<?= $kodeOtomatis ?>"
+                                readonly>
 
-</div>
+                        </div>
 
-<div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-<label>Nama Produk</label>
+                            <label>Nama Produk</label>
 
-<input
-type="text"
-name="nama_produk"
-class="form-control"
-required>
+                            <input type="text" name="nama_produk" class="form-control" required>
 
-</div>
+                        </div>
 
-<div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-<label>Kategori</label>
+                            <label>Kategori</label>
 
-<select
-name="id_kategori"
-class="form-select"
-required>
+                            <select name="id_kategori" class="form-select" required>
 
-<option value="">
-Pilih Kategori
-</option>
+                                <option value="">
+                                    Pilih Kategori
+                                </option>
 
-<?php
+                                <?php
 
-$kategori =
-$pdo->query("
+                                $kategori =
+                                    $pdo->query("
 SELECT *
 FROM kategori
 ORDER BY nama_kategori ASC
 ");
 
-while($k = $kategori->fetch()):
+                                while ($k = $kategori->fetch()):
 
-?>
+                                    ?>
 
-<option
-value="<?= $k['id_kategori']; ?>">
+                                    <option value="<?= $k['id_kategori']; ?>">
 
-<?= $k['nama_kategori']; ?>
+                                        <?= $k['nama_kategori']; ?>
 
-</option>
+                                    </option>
 
-<?php endwhile; ?>
+                                <?php endwhile; ?>
 
-</select>
+                            </select>
 
-</div>
+                        </div>
 
-<div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-<label>Stok</label>
+                            <label>Stok</label>
 
-<input
-type="number"
-name="stok"
-class="form-control"
-required>
+                            <input type="number" name="stok" class="form-control" required>
 
-</div>
+                        </div>
 
-<div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-<label>Harga Beli</label>
+                            <label>Harga Beli</label>
 
-<input
-type="number"
-name="harga_beli"
-class="form-control"
-required>
+                            <input type="number" name="harga_beli" class="form-control" required>
 
-</div>
+                        </div>
 
-<div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-<label>Harga Jual</label>
+                            <label>Harga Jual</label>
 
-<input
-type="number"
-name="harga_jual"
-class="form-control"
-required>
+                            <input type="number" name="harga_jual" class="form-control" required>
 
-</div>
+                        </div>
 
-<div class="col-md-12">
+                        <div class="col-md-12">
 
-<label>Foto Produk</label>
+                            <label>Foto Produk</label>
 
-<input
-type="file"
-name="foto"
-class="form-control"
-accept="image/*"
-onchange="previewImage(this,'previewTambah')">
+                            <input type="file" name="foto" class="form-control" accept="image/*"
+                                onchange="previewImage(this,'previewTambah')">
 
-<br>
+                            <br>
 
-<img
-id="previewTambah"
-src="https://via.placeholder.com/120"
-style="
+                            <img id="previewTambah" src="https://via.placeholder.com/120" style="
 width:120px;
 height:120px;
 object-fit:cover;
@@ -759,99 +666,96 @@ border:1px solid #ddd;
 border-radius:10px;
 ">
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
-<div class="modal-footer">
+                <div class="modal-footer">
 
-<button
-type="submit"
-name="tambah"
-class="btn btn-primary">
+                    <button type="submit" name="tambah" class="btn btn-primary">
 
-Simpan Produk
+                        Simpan Produk
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-</form>
+            </form>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <script>
 
-function previewImage(input,id){
+    function previewImage(input, id) {
 
-let preview =
-document.getElementById(id);
+        let preview =
+            document.getElementById(id);
 
-if(input.files && input.files[0]){
+        if (input.files && input.files[0]) {
 
-let reader =
-new FileReader();
+            let reader =
+                new FileReader();
 
-reader.onload = function(e){
+            reader.onload = function (e) {
 
-preview.src =
-e.target.result;
+                preview.src =
+                    e.target.result;
 
-};
+            };
 
-reader.readAsDataURL(
-input.files[0]
-);
+            reader.readAsDataURL(
+                input.files[0]
+            );
 
-}
+        }
 
-}
+    }
 
-document
-.querySelectorAll('.btnHapus')
-.forEach(function(btn){
+    document
+        .querySelectorAll('.btnHapus')
+        .forEach(function (btn) {
 
-btn.addEventListener(
-'click',
-function(e){
+            btn.addEventListener(
+                'click',
+                function (e) {
 
-e.preventDefault();
+                    e.preventDefault();
 
-let url = this.href;
+                    let url = this.href;
 
-Swal.fire({
+                    Swal.fire({
 
-title:'Hapus Produk?',
+                        title: 'Hapus Produk?',
 
-text:'Data tidak dapat dikembalikan',
+                        text: 'Data tidak dapat dikembalikan',
 
-icon:'warning',
+                        icon: 'warning',
 
-showCancelButton:true,
+                        showCancelButton: true,
 
-confirmButtonText:'Ya, Hapus',
+                        confirmButtonText: 'Ya, Hapus',
 
-cancelButtonText:'Batal'
+                        cancelButtonText: 'Batal'
 
-}).then((result)=>{
+                    }).then((result) => {
 
-if(result.isConfirmed){
+                        if (result.isConfirmed) {
 
-window.location = url;
+                            window.location = url;
 
-}
+                        }
 
-});
+                    });
 
-});
+                });
 
-});
+        });
 
 </script>
 

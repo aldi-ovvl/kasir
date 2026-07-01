@@ -12,7 +12,7 @@ $password = password_hash(
 
 $role = $_POST['role'];
 
-mysqli_query($koneksi,"
+mysqli_query($koneksi, "
 INSERT INTO users
 (
 nama,
